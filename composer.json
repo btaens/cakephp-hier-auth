@@ -1,5 +1,5 @@
 {
-    "name": "btaens/hier-auth",
+    "name": "btaens/cakephp-hier-auth",
     "type": "cakephp-plugin",
     "description": "A CakePHP plugin for hierarchical, role based, simple authorization.",
     "keywords": ["cakephp", "plugin", "hierarchy", "hierauth", "acl", "roles"],
