@@ -1,0 +1,6 @@
+controllers:
+    ALL: [ROOT, ADMIN] # ROOT and ADMIN have access rights to all controllers and actions
+    Posts:
+        ALL: [MODERATOR, -ADMIN] # Grant acces to MODERATOR roles for all actions, but deny ADMIN roles (order is important)
+        index: [MEMBER] # Grant access to MEMBER roles for index action
+        add: [-JUNIOR] # Roles not defined in hierarchy can also be managed

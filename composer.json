@@ -1,0 +1,37 @@
+{
+    "name": "btaens/hier-auth",
+    "type": "cakephp-plugin",
+    "description": "A CakePHP plugin for hierarchical, role based, simple authorization.",
+    "keywords": ["cakephp", "plugin", "hierarchy", "hierauth", "acl", "roles"],
+    "homepage": "https://github.com/btaens/hier-auth",
+    "license": "MIT",
+    "require": {
+        "php": ">=5.4.16",
+        "cakephp/cakephp": "~3.0",
+        "symfony/yaml": "~2.6"
+    },
+    "authors": [
+        {
+            "name": "Bene Tamás",
+            "email": "btaens@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "HierAuth\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "HierAuth\\Test\\": "tests",
+            "Cake\\Test\\": "vendor/cakephp/cakephp/tests"
+        }
+    },
+    "extra": {
+        "installer-name": "HierAuth"
+    }
+}

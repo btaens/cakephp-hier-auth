@@ -1,0 +1,13 @@
+hierarchy:
+   ROOT: # Any roles in ROOT get access to any route that ROOT can access
+       - DEVELOPER
+       - OWNER
+   MODERATOR:
+       - FINANCE
+       - LABOR
+   ADMIN:
+       - @MODERATOR # All roles in MODERATOR now have all access rights of ADMIN
+       - SALES
+       - CONTACT
+   USER:
+       - MEMBER
