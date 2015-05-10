@@ -1,25 +1,25 @@
-# HyAuth
+# HierAuth
 
-HyAuth is a simple, hierarchical ACL authorization plugin for CakePHP 3. You can grant and deny access based on roles, and create virtual ones to include sub-roles.
+HierAuth is a simple, hierarchical ACL authorization plugin for CakePHP 3. You can grant and deny access based on roles, and create virtual ones to include sub-roles.
 
 ## Installing
 
 Using composer, install the plugin:
 
-    composer require btaens/hy-auth
+    composer require btaens/cakephp-hier-auth
 
 Insert the following line into your ``config/bootstrap.php`` file:
 
-    Plugin::load('HyAuth');
+    Plugin::load('HierAuth');
 
 ## Setup
 
-Load and configure HyAuth through AuthComponent:
+Load and configure HierAuth through AuthComponent:
 
 ```php
 $this->loadComponent('Auth', [
     'authorize' => [
-        'HyAuth.Hy' => [
+        'HierAuth.Hier' => [
             'hierarchyFile' => 'hierarchy.yml',
             'aclFile' => 'acl.yml',
             'roleColumn' => false,
@@ -97,7 +97,7 @@ as it's part of ADMIN, however ``[-ADMIN, CONTACT]`` grants access to CONTACT, a
 
 ### Table setup
 
-HyAuth can get your user's roles from multiple tables, all of which can be associated through hasMany or hasAndBelongsToMany,
+HierAuth can get your user's roles from multiple tables, all of which can be associated through hasMany or hasAndBelongsToMany,
 or even a column of the User table itself, as a JSON field.
 
 If you're using one of your user table's column for your users' role setup, you'll have to save the roles JSON encoded, or
@@ -123,7 +123,7 @@ Pass in the associations you'd like to use in the ``roleKeys`` config key, in th
 
 For each association, you have to provide whether the user has multiple or single ones through the ``multi`` key, which is
 either true or false.
-The ``column`` key is the column in the table from which HyAuth reads the role's label (the one you write an your acl and hirarchy
+The ``column`` key is the column in the table from which HierAuth reads the role's label (the one you write an your acl and hirarchy
 configuration). This can be 'id', however, a more verbose unique column is recommended for readability (and maintainability,
 if you later want to move your database and the role table happens to start with a different id, you have to rewrite your entire
 ACL roles configuration).
