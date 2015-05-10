@@ -1,5 +1,5 @@
 <?php
-namespace HyAuth\Test\Fixture;
+namespace HierAuth\Test\Fixture;
 
 use Cake\TestSuite\Fixture\TestFixture;
 

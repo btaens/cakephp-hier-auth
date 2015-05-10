@@ -20,10 +20,10 @@ class HierAuthorizeTest extends TestCase
 {
 
     public $fixtures = [
-        'plugin.hy_auth.users',
-        'plugin.hy_auth.roles',
-        'plugin.hy_auth.rights',
-        'plugin.hy_auth.roles_users',
+        'plugin.hier_auth.users',
+        'plugin.hier_auth.roles',
+        'plugin.hier_auth.rights',
+        'plugin.hier_auth.roles_users',
     ];
 
     public $request;

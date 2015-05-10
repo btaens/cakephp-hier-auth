@@ -94,4 +94,4 @@ Log::config([
         'file' => 'error',
     ]
 ]);
-Plugin::load('HyAuth', ['path' => ROOT]);
+Plugin::load('HierAuth', ['path' => ROOT]);
