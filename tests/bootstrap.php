@@ -1,9 +1,11 @@
 <?php
+
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use Cake\Datasource\ConnectionManager;
 use Cake\Log\Log;
+
 require_once 'vendor/autoload.php';
 // Path constants to a few helpful things.
 if (!defined('DS')) {

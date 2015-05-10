@@ -3,7 +3,8 @@ namespace HierAuth\Test\Fixture;
 
 use Cake\TestSuite\Fixture\TestFixture;
 
-class RightsFixture extends TestFixture {
+class RightsFixture extends TestFixture
+{
 
     /**
      * Fields

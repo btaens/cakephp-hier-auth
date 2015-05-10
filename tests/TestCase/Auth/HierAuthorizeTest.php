@@ -5,11 +5,10 @@ use Cake\Cache\Cache;
 use Cake\Controller\ComponentRegistry;
 use Cake\Core\Exception\Exception;
 use Cake\Network\Request;
-use Cake\ORM\TableRegistry;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use HierAuth\Auth\HierAuthorize;
-use Cake\ORM\Entity;
 
 /**
  * @property Request $request
@@ -32,6 +31,13 @@ class HierAuthorizeTest extends TestCase
 
     public $Users;
 
+    /**
+     * Setup the test case, backup the static object values so they can be restored.
+     * Specifically backs up the contents of Configure and paths in App if they have
+     * not already been backed up.
+     *
+     * @return void
+     */
     public function setUp()
     {
         parent::setUp();
@@ -76,9 +82,13 @@ class HierAuthorizeTest extends TestCase
         $recursionHierarchy = "hierarchy:\n    ROOT:\n        - @ADMIN\n        - NEWBIE\n    ADMIN:\n        - @ROOT\n        - MEMBER";
 
         file_put_contents(CONFIG . 'hierarchy.recursion.yml', $recursionHierarchy);
-
     }
 
+    /**
+     * teardown any static object changes and restore them.
+     *
+     * @return void
+     */
     public function tearDown()
     {
         unlink(CONFIG . 'hierarchy.malformed.yml');
@@ -261,6 +271,15 @@ class HierAuthorizeTest extends TestCase
         $this->assertFalse($access);
     }
 
+    /**
+     * @param $id
+     * @return mixed
+     */
+    protected function _getUser($id)
+    {
+        return $this->Users->find()->where(['Users.id' => $id])->contain(['Roles', 'Rights'])->first()->toArray();
+    }
+
     public function testColumnRoleAuthorize()
     {
         $config = [
@@ -277,7 +296,6 @@ class HierAuthorizeTest extends TestCase
 
         $access = $hyAuth->authorize($user, $this->request);
         $this->assertTrue($access);
-
     }
 
     public function testMissingRoleColumn()
@@ -296,7 +314,6 @@ class HierAuthorizeTest extends TestCase
         $user = $this->_getUser(4);
 
         $access = $hyAuth->authorize($user, $this->request);
-
     }
 
     public function testMalformedRoleColumn()
@@ -315,7 +332,6 @@ class HierAuthorizeTest extends TestCase
         $user = $this->_getUser(5);
 
         $access = $hyAuth->authorize($user, $this->request);
-
     }
 
     public function testMalformedRoleKeysConfig()
@@ -335,7 +351,6 @@ class HierAuthorizeTest extends TestCase
         $user = $this->_getUser(3);
 
         $access = $hyAuth->authorize($user, $this->request);
-
     }
 
     public function testMissingRoleKeysConfig()
@@ -364,7 +379,6 @@ class HierAuthorizeTest extends TestCase
         $user = $this->_getUser(3);
 
         $access = $hyAuth->authorize($user, $this->request);
-
     }
 
     public function testMissingMultiRoleKeysConfig()
@@ -393,7 +407,6 @@ class HierAuthorizeTest extends TestCase
         $user = $this->_getUser(3);
 
         $access = $hyAuth->authorize($user, $this->request);
-
     }
 
     public function testMissingMultiRoleKeysColumnConfig()
@@ -422,7 +435,6 @@ class HierAuthorizeTest extends TestCase
         $user = $this->_getUser(2);
 
         $access = $hyAuth->authorize($user, $this->request);
-
     }
 
     public function testMissingColumnRoleKeysConfig()
@@ -451,15 +463,5 @@ class HierAuthorizeTest extends TestCase
         $user = $this->_getUser(3);
 
         $access = $hyAuth->authorize($user, $this->request);
-
     }
-
-    /**
-     * @param $id
-     * @return mixed
-     */
-    protected function _getUser($id) {
-        return $this->Users->find()->where(['Users.id' => $id])->contain(['Roles', 'Rights'])->first()->toArray();
-    }
-
 }

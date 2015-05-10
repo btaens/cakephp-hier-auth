@@ -35,7 +35,8 @@ class HierAuthorize extends BaseAuthorize
     ];
 
     /**
-     * @inheritDoc
+     * @param ComponentRegistry $registry The controller for this request.
+     * @param array $config An array of config. This class does not use any config.
      */
     public function __construct(ComponentRegistry $registry, array $config = [])
     {
@@ -59,7 +60,7 @@ class HierAuthorize extends BaseAuthorize
             $this->_hierarchy = $this->_getHierarchy();
             $this->_acl = $this->_getAcl();
 
-            Cache::write('hierarchy_auth_cache', array('acl' => $this->_acl, 'hierarchy' => $this->_hierarchy));
+            Cache::write('hierarchy_auth_cache', ['acl' => $this->_acl, 'hierarchy' => $this->_hierarchy]);
             Cache::write('hierarchy_auth_build_time', time());
         } else {
             $cache = Cache::read('hierarchy_auth_cache');
@@ -69,7 +70,9 @@ class HierAuthorize extends BaseAuthorize
     }
 
     /**
-     * @inheritDoc
+     * @param array $user Active user data
+     * @param Request $request Request instance.
+     * @return bool
      */
     public function authorize($user, Request $request)
     {
@@ -82,15 +85,15 @@ class HierAuthorize extends BaseAuthorize
     /**
      * Authorize user based on controller, and action
      *
-     * @param $user
-     * @param string $controller
-     * @param string $action
+     * @param array $user Active user data
+     * @param string $controller Controller to validate
+     * @param string $action Action to validate
      * @return bool
      */
     public function validate($user, $controller, $action)
     {
         $userRoles = $this->_getRoles($user);
-        $authRoles = array();
+        $authRoles = [];
 
         if (isset($this->_acl[$this->_allSign])) {
             $authRoles = $this->_acl[$this->_allSign];
@@ -125,7 +128,7 @@ class HierAuthorize extends BaseAuthorize
         $yaml = file_get_contents(CONFIG . $file);
         try {
             $yaml = Yaml::parse($yaml);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new Exception(sprintf('Malformed hierarchy config file, check YAML syntax: %s', $e->getMessage()));
         }
 
@@ -147,8 +150,8 @@ class HierAuthorize extends BaseAuthorize
      */
 
     /**
-     * @param array $hierarchy
-     * @param int $recLevel
+     * @param array $hierarchy An array of the hierarchy data
+     * @param int $recLevel Recursion level
      * @return array
      * @throws Exception
      */
@@ -200,7 +203,7 @@ class HierAuthorize extends BaseAuthorize
         $yaml = file_get_contents(CONFIG . $file);
         try {
             $yaml = Yaml::parse($yaml);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new Exception(sprintf('Malformed acl configuration file. Check syntax: %s', $e->getMessage()));
         }
 
@@ -215,12 +218,12 @@ class HierAuthorize extends BaseAuthorize
     /**
      * Parses ACL configuration
      *
-     * @param array $acl
+     * @param array $acl Acl configuration in array format
      * @return array
      */
     protected function _parseAcl(array $acl)
     {
-        $parsedAcl = array();
+        $parsedAcl = [];
 
         // check global ACL access rights
         if (isset($acl[$this->_allSign])) {
@@ -230,7 +233,7 @@ class HierAuthorize extends BaseAuthorize
 
         // iterate through controllers and format role authorization
         foreach ($acl as $controller => $actions) {
-            $parsedAcl[$controller] = array();
+            $parsedAcl[$controller] = [];
             // check controller-wide access rights
             if (isset($actions[$this->_allSign])) {
                 $parsedAcl[$controller][$this->_allSign] = $this->_iterateAccessRights($actions[$this->_allSign]);
@@ -250,12 +253,12 @@ class HierAuthorize extends BaseAuthorize
      * Helper function
      * Convert YAML config access rights
      *
-     * @param array $yamlRoles
+     * @param array $yamlRoles Array of roles to iterate through
      * @return array
      */
     protected function _iterateAccessRights(array $yamlRoles)
     {
-        $checkedRoles = array();
+        $checkedRoles = [];
 
         foreach ($yamlRoles as $role) {
             if (substr($role, 0, strlen($this->_denySign)) == $this->_denySign) {
@@ -272,20 +275,20 @@ class HierAuthorize extends BaseAuthorize
      * Helper function
      * Check and return roles belonging to a super role with super role's access rights
      *
-     * @param string $role
-     * @param bool $authorized
+     * @param string $role Referenced role to flatten
+     * @param bool $authorized Super role is authorized or not
      * @return array
      */
     protected function _flattenSuperRole($role, $authorized)
     {
         if (isset($this->_hierarchy[$role])) {
-            $roles = array();
+            $roles = [];
             foreach ($this->_hierarchy[$role] as $subRole) {
                 $roles[$subRole] = $authorized;
             }
             $roles[$role] = $authorized;
         } else {
-            $roles = array($role => $authorized);
+            $roles = [$role => $authorized];
         }
 
         return $roles;
@@ -294,7 +297,7 @@ class HierAuthorize extends BaseAuthorize
     /**
      * Retrieve role labels based on configuration.
      *
-     * @param array $user
+     * @param array $user Active user data
      * @return bool|array
      */
     protected function _getRoles(array $user)
@@ -349,5 +352,4 @@ class HierAuthorize extends BaseAuthorize
 
         return $roles;
     }
-
 }
