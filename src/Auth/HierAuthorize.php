@@ -5,7 +5,6 @@ use Cake\Auth\BaseAuthorize;
 use Cake\Cache\Cache;
 use Cake\Controller\ComponentRegistry;
 use Cake\Core\Exception\Exception;
-use Cake\Network\Exception\UnauthorizedException;
 use Cake\Network\Request;
 use Symfony\Component\Yaml\Yaml;
 
