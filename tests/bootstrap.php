@@ -1,99 +1,75 @@
 <?php
+/**
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ */
+require dirname(__DIR__) . '/vendor/cakephp/cakephp/src/basics.php';
+require_once dirname(__DIR__) . '/vendor/autoload.php';
 
-use Cake\Cache\Cache;
-use Cake\Core\Configure;
-use Cake\Core\Plugin;
-use Cake\Datasource\ConnectionManager;
-use Cake\Log\Log;
+define('ROOT', dirname(__DIR__));
+define('APP_DIR', 'src');
 
-require_once 'vendor/autoload.php';
-// Path constants to a few helpful things.
-if (!defined('DS')) {
-    define('DS', DIRECTORY_SEPARATOR);
+define('APP', rtrim(sys_get_temp_dir(), DS) . DS . APP_DIR . DS);
+if (!is_dir(APP)) {
+    mkdir(APP, 0770, true);
 }
-define('ROOT', dirname(__DIR__) . DS);
-define('CAKE_CORE_INCLUDE_PATH', ROOT . 'vendor' . DS . 'cakephp' . DS . 'cakephp');
-define('CORE_PATH', ROOT . 'vendor' . DS . 'cakephp' . DS . 'cakephp' . DS);
-define('CAKE', CORE_PATH . 'src' . DS);
-define('APP', ROOT . 'tests' . DS . 'test_app' . DS);
-define('APP_DIR', 'test_app');
-define('WEBROOT_DIR', 'webroot');
-define('WWW_ROOT', APP . 'webroot' . DS);
-define('TMP', ROOT . 'tests' . DS . 'tmp' . DS);
+
+define('CONFIG', ROOT . DS . 'config' . DS);
+
+define('TMP', ROOT . DS . 'tmp' . DS);
 if (!is_dir(TMP)) {
     mkdir(TMP, 0770, true);
 }
-define('CONFIG', ROOT . 'config' . DS);
-define('CACHE', TMP);
-define('LOGS', TMP);
-$loader = new \Cake\Core\ClassLoader;
-$loader->register();
-$loader->addNamespace('Cake\Test\Fixture', ROOT . '/vendor/cakephp/cakephp/tests/Fixture');
-require_once CORE_PATH . 'config/bootstrap.php';
-date_default_timezone_set('UTC');
-mb_internal_encoding('UTF-8');
-Configure::write('debug', true);
-Configure::write('App', [
-    'namespace' => 'App',
-    'encoding' => 'UTF-8',
-    'base' => false,
-    'baseUrl' => false,
-    'dir' => 'src',
-    'webroot' => 'webroot',
-    'www_root' => APP . 'webroot',
-    'fullBaseUrl' => 'http://localhost',
-    'imageBaseUrl' => 'img/',
-    'jsBaseUrl' => 'js/',
-    'cssBaseUrl' => 'css/',
-    'paths' => [
-        'plugins' => [APP . 'Plugin' . DS],
-        'templates' => [APP . 'Template' . DS]
-    ]
+
+define('LOGS', TMP . 'logs' . DS);
+define('CACHE', TMP . 'cache' . DS);
+
+define('CAKE_CORE_INCLUDE_PATH', ROOT . '/vendor/cakephp/cakephp');
+define('CORE_PATH', CAKE_CORE_INCLUDE_PATH . DS);
+
+Cake\Core\Configure::write('App', [
+    'namespace' => 'App'
 ]);
-Configure::write('Session', [
-    'defaults' => 'php'
-]);
-Cache::config([
-    '_cake_core_' => [
-        'engine' => 'File',
-        'prefix' => 'cake_core_',
-        'serialize' => true
-    ],
-    '_cake_model_' => [
-        'engine' => 'File',
-        'prefix' => 'cake_model_',
-        'serialize' => true
-    ],
+
+Cake\Core\Configure::write('debug', true);
+
+$cache = [
     'default' => [
         'engine' => 'File',
-        'prefix' => 'default_',
-        'serialize' => true
+        'path' => CACHE
+    ],
+    '_cake_core_' => [
+        'className' => 'File',
+        'prefix' => 'crud_myapp_cake_core_',
+        'path' => CACHE . 'persistent/',
+        'serialize' => true,
+        'duration' => '+10 seconds'
+    ],
+    '_cake_model_' => [
+        'className' => 'File',
+        'prefix' => 'crud_my_app_cake_model_',
+        'path' => CACHE . 'models/',
+        'serialize' => 'File',
+        'duration' => '+10 seconds'
     ]
-]);
-// Ensure default test connection is defined
+];
+
+Cake\Cache\Cache::config($cache);
+
+Cake\Core\Plugin::load('HierAuth', ['path' => ROOT]);
+
 if (!getenv('db_class')) {
     putenv('db_class=Cake\Database\Driver\Sqlite');
     putenv('db_dsn=sqlite::memory:');
 }
-ConnectionManager::config('test', [
+
+Cake\Datasource\ConnectionManager::config('test', [
     'className' => 'Cake\Database\Connection',
     'driver' => getenv('db_class'),
     'dsn' => getenv('db_dsn'),
     'database' => getenv('db_database'),
     'username' => getenv('db_username'),
     'password' => getenv('db_password'),
-    'timezone' => 'UTC'
+    'timezone' => 'UTC',
+    'quoteIdentifiers' => true,
+    'cacheMetadata' => true,
 ]);
-Log::config([
-    'debug' => [
-        'engine' => 'Cake\Log\Engine\FileLog',
-        'levels' => ['notice', 'info', 'debug'],
-        'file' => 'debug',
-    ],
-    'error' => [
-        'engine' => 'Cake\Log\Engine\FileLog',
-        'levels' => ['warning', 'error', 'critical', 'alert', 'emergency'],
-        'file' => 'error',
-    ]
-]);
-Plugin::load('HierAuth', ['path' => ROOT]);

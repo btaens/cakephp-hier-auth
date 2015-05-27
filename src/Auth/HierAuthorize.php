@@ -42,7 +42,9 @@ class HierAuthorize extends BaseAuthorize
         parent::__construct($registry, $config);
 
         if (!file_exists(CONFIG . $this->config('hierarchyFile'))) {
-            throw new Exception(sprintf("Provided hierarchy config file %s doesn't exist.", $this->config('hierarchyFile')));
+            throw new Exception(
+                sprintf("Provided hierarchy config file %s doesn't exist.", $this->config('hierarchyFile'))
+            );
         }
 
         if (!file_exists(CONFIG . $this->config('aclFile'))) {
@@ -180,7 +182,10 @@ class HierAuthorize extends BaseAuthorize
                     }
 
                     // replace reference with referenced roles
-                    $subRole = $this->_parseHierarchy($this->_rootHierarchy[substr($subRole, strlen($this->_referenceSign))], ++$recLevel);
+                    $subRole = $this->_parseHierarchy(
+                        $this->_rootHierarchy[substr($subRole, strlen($this->_referenceSign))],
+                        ++$recLevel
+                    );
                     array_splice($hierarchy, $offset, 1, $subRole);
                 }
             }
@@ -261,7 +266,10 @@ class HierAuthorize extends BaseAuthorize
 
         foreach ($yamlRoles as $role) {
             if (substr($role, 0, strlen($this->_denySign)) == $this->_denySign) {
-                $checkedRoles = array_merge($checkedRoles, $this->_flattenSuperRole(substr($role, strlen($this->_denySign)), false));
+                $checkedRoles = array_merge(
+                    $checkedRoles,
+                    $this->_flattenSuperRole(substr($role, strlen($this->_denySign)), false)
+                );
             } else {
                 $checkedRoles = array_merge($checkedRoles, $this->_flattenSuperRole($role, true));
             }
@@ -304,7 +312,9 @@ class HierAuthorize extends BaseAuthorize
         // check if json column based authentication
         if ($this->config('roleColumn')) {
             if (!isset($user[$this->config('roleColumn')])) {
-                throw new Exception(sprintf('Provided roleColumn "%s" doesn\'t exist for this user.', $this->config('roleColumn')));
+                throw new Exception(
+                    sprintf('Provided roleColumn "%s" doesn\'t exist for this user.', $this->config('roleColumn'))
+                );
             }
 
             $roles = $user[$this->config('roleColumn')];
@@ -312,7 +322,9 @@ class HierAuthorize extends BaseAuthorize
             if (!is_array($roles)) {
                 $roles = json_decode($roles, true);
                 if (!is_array($roles)) {
-                    throw new Exception(sprintf('roleColumn "%s" is not in a valid format.', $this->config('roleColumn')));
+                    throw new Exception(
+                        sprintf('roleColumn "%s" is not in a valid format.', $this->config('roleColumn'))
+                    );
                 }
             }
         } else {
@@ -334,14 +346,26 @@ class HierAuthorize extends BaseAuthorize
 
                     foreach ($user[$role] as $userRole) {
                         if (!isset($userRole[$settings['column']])) {
-                            throw new Exception(sprintf('Provided column %s with association %s doesn\'t exist.', $settings['column'], $role));
+                            throw new Exception(
+                                sprintf(
+                                    'Provided column %s with association %s doesn\'t exist.',
+                                    $settings['column'],
+                                    $role
+                                )
+                            );
                         }
 
                         $roles[] = $userRole[$settings['column']];
                     }
                 } else {
                     if (!isset($user[$role]) || !isset($user[$role][$settings['column']])) {
-                        throw new Exception(sprintf('Provided column %s with association %s doesn\'t exist.', $settings['column'], $role));
+                        throw new Exception(
+                            sprintf(
+                                'Provided column %s with association %s doesn\'t exist.',
+                                $settings['column'],
+                                $role
+                            )
+                        );
                     }
 
                     $roles[] = $user[$role][$settings['column']];

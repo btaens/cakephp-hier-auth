@@ -121,7 +121,7 @@ class HierAuthorizeTest extends TestCase
         ];
 
         $hyAuth = new HierAuthorize($this->registry, $config);
-        $this->assertArraySubset($config, $hyAuth->config());
+        $this->assertEquals($config['hierarchyFile'], $hyAuth->config('hierarchyFile'));
     }
 
     public function testMissingAclException()
