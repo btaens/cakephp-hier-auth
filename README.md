@@ -6,7 +6,6 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/btaens/cakephp-hier-auth/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/btaens/cakephp-hier-auth/?branch=master)
 [![Total Downloads](https://poser.pugx.org/btaens/cakephp-hier-auth/downloads)](https://packagist.org/packages/btaens/cakephp-hier-auth)
 [![License](https://poser.pugx.org/btaens/cakephp-hier-auth/license)](https://github.com/btaens/cakephp-hier-auth/blob/master/LICENSE)
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/btaens/cakephp-hier-auth/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 HierAuth is a simple, hierarchical ACL authorization plugin for CakePHP 3. You can grant and deny access based on roles, and create virtual ones to include sub-roles.
 
