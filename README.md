@@ -136,19 +136,28 @@ if you later want to move your database and the role table happens to start with
 ACL roles configuration).
 
 Whichever associations you choose to define, you also have to make sure they get saved in the session when the user logs in
-through whichever authentication method you use. Make sure you put them in ``contain`` inside your authentication configuration:
+through whichever authentication method you use. You will need to write a custom finder method to ensure the correct data is contained.
 
 ```php
 $this->loadComponent('Auth', [
     'authenticate' => [
         'Form' => [
-            'contain' => [
-                'Roles',
-                'Right',
-            ],
+            'finder'=>'AuthUser'
         ],
     ],
 ]);
+```
+
+```php
+// In your UsersTable
+public function findAuthUser(Query $query, $options)
+{
+    $query->contain([
+        'Roles',
+        'Rights'
+    ]);
+    return $query;
+}
 ```
 
 ### Requirements
