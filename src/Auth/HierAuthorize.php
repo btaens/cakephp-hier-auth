@@ -101,7 +101,7 @@ class HierAuthorize extends BaseAuthorize
         }
 
         if (isset($this->_acl[$controller][$this->_allSign])) {
-            $authRoles = array_merge($this->_acl[$controller][$this->_allSign]);
+            $authRoles = array_merge($this->_acl[$controller][$this->_allSign], $authRoles);
         }
 
         if (isset($this->_acl[$controller][$action])) {
