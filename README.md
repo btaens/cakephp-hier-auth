@@ -54,7 +54,7 @@ hierarchy:
        - FINANCE
        - LABOR
    ADMIN:
-       - @MODERATOR
+       - "@MODERATOR"
        - SALES
        - CONTACT
    USER:

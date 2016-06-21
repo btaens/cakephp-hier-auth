@@ -6,7 +6,7 @@ hierarchy:
        - FINANCE
        - LABOR
    ADMIN:
-       - @MODERATOR # All roles in MODERATOR now have all access rights of ADMIN
+       - "@MODERATOR" # All roles in MODERATOR now have all access rights of ADMIN
        - SALES
        - CONTACT
    USER:
